@@ -1,5 +1,4 @@
 import os
-import ntpath
 import json
 
 def dirtojson(path):
