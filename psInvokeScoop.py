@@ -11,6 +11,7 @@ def psCommandBucket():
 
 
 if __name__ == "__main__":
+    psCommandBucket()
     with open("scoopPackage.json") as f:
         dirlist = json.load(f)
         for dir in dirlist:
