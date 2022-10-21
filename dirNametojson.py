@@ -6,5 +6,6 @@ def dirtojson(path):
         json.dump(os.listdir(path), f)
 
 if __name__ == "__main__":
-    path = "C:\\Users\\%USERNAME%\\scoop\\apps"
+    userProfile = os.environ['USERPROFILE']
+    path = f"{userProfile}\\scoop\\apps"
     dirtojson(path)
