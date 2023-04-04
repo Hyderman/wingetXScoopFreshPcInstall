@@ -1,17 +1,8 @@
-import os
 import subprocess
 import json
 
-
 def psCommand(cmd):
     subprocess.run(["pwsh", "-Command", cmd])
-
-
-def configurePs():
-    allowRemoteScript = "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser"
-    scoopScript = "irm get.scoop.sh | iex"
-    psCommand(allowRemoteScript)
-    psCommand(scoopScript)
 
 
 def scoopBucket():
@@ -20,7 +11,6 @@ def scoopBucket():
 
 
 def scoopInstall():
-    psCommand("scoop install aria2")
     with open("scoopPackage.json") as scoopJson:
         scoopListSoft = json.load(scoopJson)
         for soft in scoopListSoft:
@@ -45,7 +35,6 @@ def psProfile():
 
 
 if __name__ == "__main__":
-    configurePs()
     scoopBucket()
     scoopInstall()
     wingetInstall()
