@@ -4,7 +4,7 @@ import json
 
 
 def psCommand(cmd):
-    subprocess.run(["powershell", "-Command", cmd])
+    subprocess.run(["pwsh", "-Command", cmd])
 
 
 def configurePs():
@@ -22,23 +22,22 @@ def scoopBucket():
 def scoopInstall():
     with open("scoopPackage.json") as scoopJson:
         scoopListSoft = json.load(scoopJson)
-        for scoopSoft in scoopListSoft:
-            psScoopCmd = f"scoop install {scoopSoft}"
+        for soft in scoopListSoft:
+            psScoopCmd = f"scoop install {soft}"
             psCommand(psScoopCmd)
 
 
 def wingetInstall():
     with open("wingetPackage.json") as wingetJson:
         wingetListSoft = json.load(wingetJson)
-        for wingetSoft in wingetListSoft:
-            psWingetCmd = f"winget install {wingetSoft}"
+        for soft in wingetListSoft:
+            psWingetCmd = f"winget install {soft}"
             psCommand(psWingetCmd)
 
 
 def psProfile():
-    os.replace(
-        "Microsoft.PowerShell_profile.ps1",
-        "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1",
+    psCommand(
+        "Copy-Item -Path $env:USERPROFILE\Programmation\ScoopInstallMultiplePackage\Microsoft.PowerShell_profile.ps1 -Destination $env:USERPROFILE/Documents/PowerShell/Microsoft2.PowerShell_profile.ps1"
     )
     psCommand("Install-Module Pscx -Scope CurrentUser")
     psCommand("Install-Module -Name Terminal-Icons -Repository PSGallery")
