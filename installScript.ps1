@@ -4,5 +4,8 @@ pwsh -Command {
     irm get.scoop.sh | iex
     scoop install aria2
     scoop install python
-    python childScript.py 
+    python childScript.py
+    Copy-Item -Path $env:USERPROFILE\Programmation\ScoopInstallMultiplePackage\Microsoft.PowerShell_profile.ps1 -Destination $env:USERPROFILE/Documents/PowerShell/Microsoft.PowerShell_profile.ps1 
+    Install-Module Pscx -Scope CurrentUser
+    Install-Module -Name Terminal-Icons -Repository PSGallery
 }

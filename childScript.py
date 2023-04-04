@@ -26,16 +26,7 @@ def wingetInstall():
             psCommand(psWingetCmd)
 
 
-def psProfile():
-    psCommand(
-        "Copy-Item -Path $env:USERPROFILE\Programmation\ScoopInstallMultiplePackage\Microsoft.PowerShell_profile.ps1 -Destination $env:USERPROFILE/Documents/PowerShell/Microsoft.PowerShell_profile.ps1"
-    )
-    psCommand("Install-Module Pscx -Scope CurrentUser")
-    psCommand("Install-Module -Name Terminal-Icons -Repository PSGallery")
-
-
 if __name__ == "__main__":
     scoopBucket()
     scoopInstall()
     wingetInstall()
-    psProfile()
