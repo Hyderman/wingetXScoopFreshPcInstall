@@ -1,20 +1,52 @@
+import os
 import subprocess
 import json
 
-def psCommandPackage(cmd):
-    subprocess.run(["powershell", "-Command", cmd]) 
+
+def psCommand(cmd):
+    subprocess.run(["powershell", "-Command", cmd])
 
 
-def psCommandBucket():
+def configurePs():
+    allowRemoteScript = "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser"
+    scoopScript = "irm get.scoop.sh | iex"
+    psCommand(allowRemoteScript)
+    psCommand(scoopScript)
+
+
+def scoopBucket():
     cmd = "scoop bucket add main; scoop bucket add extras"
-    subprocess.run(["powershell", "-Command", cmd]) 
+    psCommand(cmd)
+
+
+def scoopInstall():
+    with open("scoopPackage.json") as scoopJson:
+        scoopListSoft = json.load(scoopJson)
+        for scoopSoft in scoopListSoft:
+            psScoopCmd = f"scoop install {scoopSoft}"
+            psCommand(psScoopCmd)
+
+
+def wingetInstall():
+    with open("wingetPackage.json") as wingetJson:
+        wingetListSoft = json.load(wingetJson)
+        for wingetSoft in wingetListSoft:
+            psWingetCmd = f"winget install {wingetSoft}"
+            psCommand(psWingetCmd)
+
+
+def psProfile():
+    os.replace(
+        "Microsoft.PowerShell_profile.ps1",
+        "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1",
+    )
+    psCommand("Install-Module Pscx -Scope CurrentUser")
+    psCommand("Install-Module -Name Terminal-Icons -Repository PSGallery")
 
 
 if __name__ == "__main__":
-    psCommandBucket()
-    with open("scoopPackage.json") as f:
-        dirlist = json.load(f)
-        for dir in dirlist:
-            if dir != "scoop":
-                cmd = f"scoop install {dir}"
-                psCommandPackage(cmd)
+    configurePs()
+    scoopBucket()
+    scoopInstall()
+    wingetInstall()
+    psProfile()
