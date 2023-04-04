@@ -6,6 +6,7 @@ def dirtojson(path):
     with open("scoopPackage.json", "w") as f:
         listSoft = os.listdir(path)
         listSoft.remove("scoop")
+        listSoft.remove("aria2")
         json.dump(listSoft, f)
     
 

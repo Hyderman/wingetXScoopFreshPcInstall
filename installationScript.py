@@ -20,6 +20,7 @@ def scoopBucket():
 
 
 def scoopInstall():
+    psCommand("scoop install aria2")
     with open("scoopPackage.json") as scoopJson:
         scoopListSoft = json.load(scoopJson)
         for soft in scoopListSoft:
@@ -31,13 +32,13 @@ def wingetInstall():
     with open("wingetPackage.json") as wingetJson:
         wingetListSoft = json.load(wingetJson)
         for soft in wingetListSoft:
-            psWingetCmd = f"winget install {soft}"
+            psWingetCmd = f"winget install {soft} --force"
             psCommand(psWingetCmd)
 
 
 def psProfile():
     psCommand(
-        "Copy-Item -Path $env:USERPROFILE\Programmation\ScoopInstallMultiplePackage\Microsoft.PowerShell_profile.ps1 -Destination $env:USERPROFILE/Documents/PowerShell/Microsoft2.PowerShell_profile.ps1"
+        "Copy-Item -Path $env:USERPROFILE\Programmation\ScoopInstallMultiplePackage\Microsoft.PowerShell_profile.ps1 -Destination $env:USERPROFILE/Documents/PowerShell/Microsoft.PowerShell_profile.ps1"
     )
     psCommand("Install-Module Pscx -Scope CurrentUser")
     psCommand("Install-Module -Name Terminal-Icons -Repository PSGallery")
