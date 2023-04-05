@@ -25,6 +25,8 @@ $wingetApps | ForEach-Object {
 Copy-Item -Path ./Powershell/* -Destination $env:USERPROFILE/Documents/PowerShell -Recurse
 Copy-Item -Path ./PowerToys/* -Destination $env:USERPROFILE/Documents/PowerToys -Recurse
 Copy-Item -Path ./WindowsTerminal/* -Destination $env:USERPROFILE/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState -Recurse
+
+$Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 pwsh -Command {
     Install-Module -Name Pscx -AllowClobber -Force
     Install-Module -Name Terminal-Icons -Repository PSGallery -Force
