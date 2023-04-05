@@ -1,8 +1,9 @@
 [
+    "Microsoft.WindowsTerminal",
     "Mozilla.Firefox",
     "Discord.Discord",
     "Microsoft.PowerToys",
-    "Microsoft.VisualStudio.2022.BuildTools",
     "KDE Connect",
-    "DuongDieuPhap.ImageGlass"
+    "DuongDieuPhap.ImageGlass",
+    "Microsoft.VisualStudio.2022.BuildTools"
 ]

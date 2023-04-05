@@ -1,1 +1,21 @@
-["7zip", "adb", "android-sdk", "cmake", "coretemp", "dark", "gcc-arm-none-eabi", "git", "llvm", "mingw", "neovim", "ninja", "nodejs", "openocd", "pandoc", "putty", "python", "qbittorrent", "sfsu", "starship", "vcredist2022", "vulkan"]
+[
+    "7zip",
+    "cmake",
+    "coretemp",
+    "dark",
+    "gcc-arm-none-eabi",
+    "git",
+    "llvm",
+    "mingw",
+    "neovim",
+    "ninja",
+    "nodejs",
+    "openocd",
+    "pandoc",
+    "putty",
+    "python",
+    "qbittorrent",
+    "sfsu",
+    "starship",
+    "vcredist2022"
+]
