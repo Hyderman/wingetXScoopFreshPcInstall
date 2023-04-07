@@ -4,8 +4,8 @@
     "Mozilla.Firefox",
     "Discord.Discord",
     "Microsoft.PowerToys",
-    "KDE Connect",
+    "KDE.KDEConnect",
     "DuongDieuPhap.ImageGlass",
     "Microsoft.VisualStudio.2022.BuildTools",
-    "Microsoft.VisualStudioCode"
+    "Microsoft.VisualStudioCode --override \"/SILENT /mergetasks=\"!runcode,addcontextmenufiles,addcontextmenufolders\"\""
 ]
