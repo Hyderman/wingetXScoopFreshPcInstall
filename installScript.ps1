@@ -16,7 +16,7 @@ sudo scoop install -g FiraCode-NF-Mono
 $scoopApps = Get-Content -Raw -Path "./scoopPackage.json" | ConvertFrom-Json
 
 # Disable UAC
-sudo Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\System" `
+sudo Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" `
     -Name "ConsentPromptBehaviorAdmin" `
     -Value 0
 # Disable internet start menu
