@@ -12,11 +12,14 @@ scoop install aria2
 sudo scoop install -g FiraCode-NF-Mono
 
 $scoopApps = Get-Content -Raw -Path ./scoopPackage.json | ConvertFrom-Json
+
 # Disable UAC
 sudo Set-ItemProperty -Path "REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 0
 # Disable internet start menu
 sudo New-Item -Path "REGISTRY::HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows" -Name "Explorer" 
 sudo New-ItemProperty -Path "REGISTRY::HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableSearchBoxSuggestions"  -Value 1 -PropertyType "DWord"
+# Restore old context menu
+sudo New-Item -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" -Value "" -Force
 
 $wingetApps = Get-Content -Raw -Path ./wingetPackage.json | ConvertFrom-Json
 $wingetUninstall = Get-Content -Raw -Path ./wingetUninstallBloatware.json | ConvertFrom-Json
@@ -42,6 +45,3 @@ pwsh -Command {
     Install-Module -Name Pscx -AllowClobber -Force
     Install-Module -Name Terminal-Icons -Repository PSGallery -Force
 }
-
-# Restore old right click context menu
-reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
