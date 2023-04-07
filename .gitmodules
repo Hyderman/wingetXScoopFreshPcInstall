@@ -1,0 +1,3 @@
+[submodule "Win-Debloat-Tools"]
+	path = Win-Debloat-Tools
+	url = https://github.com/LeDragoX/Win-Debloat-Tools.git
