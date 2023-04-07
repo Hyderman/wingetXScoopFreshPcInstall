@@ -23,7 +23,7 @@ sudo Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Pol
 sudo New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows" `
     -Name "Explorer" 
 sudo New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" `
-    -Name "DisableSearchBoxSuggestions"  `
+    -Name "DisableSearchBoxSuggestions" `
     -Value 1 `
     -PropertyType "DWord"
 # Restore old context menu
@@ -65,6 +65,7 @@ Copy-Item -Path "./nvim/*" `
 
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") `
     + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+    
 pwsh -Command {
     Install-Module -Name Pscx -AllowClobber -Force
     Install-Module -Name Terminal-Icons -Repository PSGallery -Force
