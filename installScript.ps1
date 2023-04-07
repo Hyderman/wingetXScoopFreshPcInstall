@@ -39,7 +39,7 @@ $wingetUninstall | ForEach-Object {
 Copy-Item -Path "./Powershell/*" -Destination "$env:USERPROFILE/Documents/PowerShell" -Recurse -Force
 Copy-Item -Path "./PowerToys/*" -Destination "$env:USERPROFILE/Documents/PowerToys" -Recurse -Force
 Copy-Item -Path "./WindowsTerminal/*" -Destination "$env:USERPROFILE/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState" -Recurse -Force
-Copy-Item -Path "./nvim/*" -Destination "$env:USERPROFILE\AppData\Local\nvim\init.vim"
+Copy-Item -Path "./nvim/*" -Destination "$env:USERPROFILE\AppData\Local\nvim\." -Recurse -Force
 
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 pwsh -Command {
