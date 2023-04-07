@@ -1,4 +1,5 @@
 Set-ExecutionPolicy ByPass -Scope CurrentUser
+# Install scoop
 if (!(Get-Command scoop)) {
     irm get.scoop.sh | iex
     $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")   
@@ -11,9 +12,11 @@ scoop install aria2
 sudo scoop install -g FiraCode-NF-Mono
 
 $scoopApps = Get-Content -Raw -Path ./scoopPackage.json | ConvertFrom-Json
-
 # Disable UAC
-sudo Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+sudo Set-ItemProperty -Path "REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 0
+# Disable internet start menu
+sudo New-Item -Path "REGISTRY::HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows" -Name "Explorer" 
+sudo New-ItemProperty -Path "REGISTRY::HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableSearchBoxSuggestions"  -Value 1 -PropertyType "DWord"
 
 $wingetApps = Get-Content -Raw -Path ./wingetPackage.json | ConvertFrom-Json
 $wingetUninstall = Get-Content -Raw -Path ./wingetUninstallBloatware.json | ConvertFrom-Json
