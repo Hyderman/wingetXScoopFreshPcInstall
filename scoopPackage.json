@@ -1,12 +1,15 @@
 [
     "7zip",
+    "adb",
+    "android-sdk",
     "cmake",
     "coretemp",
     "dark",
     "gcc-arm-none-eabi",
     "git",
+    "gsudo",
     "llvm",
-    "mingw",
+    "mingw-winlibs-llvm-ucrt",
     "neovim",
     "ninja",
     "nodejs",
@@ -17,6 +20,5 @@
     "qbittorrent",
     "sfsu",
     "starship",
-    "sudo",
     "vcredist2022"
 ]
