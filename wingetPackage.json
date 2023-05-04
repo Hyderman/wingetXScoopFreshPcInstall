@@ -1,5 +1,7 @@
 [
     "Microsoft.WindowsTerminal",
+    "Neovim.Neovim",
+    "wez.wezterm",
     "Microsoft.PowerShell",
     "Mozilla.Firefox",
     "Discord.Discord",

@@ -46,6 +46,17 @@ $wingetUninstall | ForEach-Object {
     sudo winget uninstall $_
 }
 
+# Remove gameoverlay pop-up
+sudo Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" `
+    -Name "AppCaptureEnabled" `
+    -Value 0
+    
+sudo Set-ItemProperty -Path "HKCU:\System\GameConfigStore" `
+    -Name "GameDVR_Enabled" `
+    -Value 0
+
+# Move different folder settings
+
 Copy-Item -Path "./Powershell/*" `
     -Destination "$env:USERPROFILE/Documents/PowerShell" `
     -Recurse `
@@ -68,5 +79,5 @@ $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") `
     
 pwsh -Command {
     Install-Module -Name Pscx -AllowClobber -Force
-    Install-Module -Name Terminal-Icons -Repository PSGallery -Force
+    # Install-Module -Name Terminal-Icons -Repository PSGallery -Force # to slow
 }
