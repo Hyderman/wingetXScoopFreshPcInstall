@@ -1,6 +1,7 @@
 [
     "Microsoft.WindowsTerminal",
     "Neovim.Neovim",
+    "yt-dlp.yt-dlp",
     "wez.wezterm",
     "Rustlang.Rustup",
     "Microsoft.PowerShell",
