@@ -1,7 +1,6 @@
 Set-ExecutionPolicy ByPass -Scope CurrentUser
 # Install scoop
-if (!(Get-Command scoop))
-{
+if (!(Get-Command scoop)) {
     Invoke-RestMethod get.scoop.sh | Invoke-Expression
     $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") `
         + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")   
@@ -16,10 +15,6 @@ sudo scoop install -g FiraCode-NF-Mono
 
 $scoopApps = Get-Content -Raw -Path "./scoopPackage.json" | ConvertFrom-Json
 
-# Disable UAC
-# sudo Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" `
-#     -Name "ConsentPromptBehaviorAdmin" `
-#     -Value 0
 # Disable internet start menu
 sudo New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows" `
     -Name "Explorer" 
@@ -43,8 +38,7 @@ Remove-Item -Force ~/Favorites/
 
 # Remove windows + l shortcut
 $LockScreenPath = "HKCU:\\Software\Microsoft\Windows\CurrentVersion\Policies\System"
-if  (!(Test-Path $LockScreenPath))
-{
+if (!(Test-Path $LockScreenPath)) {
     Write-Output "add System key"
     sudo New-Item -Path $LockScreenPath.Replace("\System", "") -Name "System" 
 }
@@ -78,33 +72,35 @@ sudo Set-ItemProperty -Path "HKCU:\System\GameConfigStore" `
     -Name "GameDVR_Enabled" `
     -Value 0
 
-# Move different folder jettings
 
+# Move different folder jettings
 Copy-Item -Path "./dotfiles/powerShell/*" `
-    -Destination "$env:USERPROFILE/Documents/" `
+    -Destination "~/Documents/" `
     -Recurse `
     -Force
 Copy-Item -Path "./dotfiles/powerToys/*" `
-    -Destination "$env:USERPROFILE/Documents/" `
+    -Destination "~/Documents/" `
     -Recurse `
     -Force
 Copy-Item -Path "./WindowsTerminal/*" `
-    -Destination "$env:USERPROFILE/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState" `
+    -Destination "~/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState" `
     -Recurse `
     -Force
-Copy-Item -Path "./nvim/*" `
-    -Destination "$env:USERPROFILE\AppData\Local\." `
-    -Recurse `
-    -Force
-Copy-Item -Path "./nvim/*" `
-    -Destination "$env:USERPROFILE\AppData\Local\." `
-    -Recurse `
-    -Force
+
+if (Test-Path -Path "~/OneDrive") {
+    # Create symlink for neovim settings
+    sudo New-Item -ItemType SymbolicLink -Path ~\AppData\Local\nvim -Target ~\OneDrive\dotfiles\nvim\nvim
+}
+else {
+    Copy-Item -Path "./nvim/*" `
+        -Destination "~\AppData\Local\." `
+        -Recurse `
+        -Force
+}
 
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") `
     + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     
 pwsh -Command {
     Install-Module -Name Pscx -AllowClobber -Force
-    # Install-Module -Name Terminal-Icons -Repository PSGallery -Force # to slow
 }
