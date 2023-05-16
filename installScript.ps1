@@ -1,6 +1,7 @@
 Set-ExecutionPolicy ByPass -Scope CurrentUser
 # Install scoop
-if (!(Get-Command scoop)) {
+if (!(Get-Command scoop))
+{
     Invoke-RestMethod get.scoop.sh | Invoke-Expression
     $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") `
         + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")   
@@ -11,38 +12,52 @@ scoop install git
 scoop bucket add main
 scoop bucket add extras
 scoop bucket add nerd-fonts
-sudo scoop install -g FiraCode-NF-Mono
+scoop install -g FiraCode-NF-Mono
 
 $scoopApps = Get-Content -Raw -Path "./scoopPackage.json" | ConvertFrom-Json
 
+$scoopApps | ForEach-Object {
+    scoop install $_
+}
+# Admin session
+sudo
+
+# Remap capslock to control
+$hexified = "00,00,00,00,00,00,00,00,02,00,00,00,1d,00,3a,00,00,00,00,00".Split(',') | % { "0x$_"};
+
+$kbLayout = 'HKLM:\System\CurrentControlSet\Control\Keyboard Layout';
+
+New-ItemProperty -Path $kbLayout -Name "Scancode Map" -PropertyType Binary -Value ([byte[]]$hexified);
+
 # Disable internet start menu
-sudo New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows" `
+New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows" `
     -Name "Explorer" 
-sudo New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" `
+New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" `
     -Name "DisableSearchBoxSuggestions" `
     -Value 1 `
     -PropertyType "DWord"
 # Restore old context menu
-sudo New-Item -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" `
+New-Item -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" `
     -Value "" `
     -Force
 
 # Remove "Saved Games folder"
-sudo Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" `
+Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" `
     -Name "{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}"
-Remove-Item -Force ~/Saved Games/
+Remove-Item -Force $Env:USERPROFILE/Saved Games/
 # Remove "Favorites folder"
-sudo Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" `
+Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" `
     -Name "Favorites"
-Remove-Item -Force ~/Favorites/
+Remove-Item -Force $Env:USERPROFILE/Favorites/
 
 # Remove windows + l shortcut
 $LockScreenPath = "HKCU:\\Software\Microsoft\Windows\CurrentVersion\Policies\System"
-if (!(Test-Path $LockScreenPath)) {
+if (!(Test-Path $LockScreenPath))
+{
     Write-Output "add System key"
-    sudo New-Item -Path $LockScreenPath.Replace("\System", "") -Name "System" 
+    New-Item -Path $LockScreenPath.Replace("\System", "") -Name "System" 
 }
-sudo New-ItemProperty -Path $LockScreenPath `
+New-ItemProperty -Path $LockScreenPath `
     -Name "DisableLockWorkstation" `
     -Value 1 `
     -PropertyType "DWord"
@@ -51,49 +66,55 @@ sudo New-ItemProperty -Path $LockScreenPath `
 $wingetApps = Get-Content -Raw -Path "./wingetPackage.json" | ConvertFrom-Json
 $wingetUninstall = Get-Content -Raw -Path "./wingetUninstallBloatware.json" | ConvertFrom-Json
 
-$scoopApps | ForEach-Object {
-    scoop install $_
-}
 
 $wingetApps | ForEach-Object {
-    sudo winget install $_
+    winget install $_
 }
 
 $wingetUninstall | ForEach-Object {
-    sudo sudo winget uninstall $_
+    winget uninstall $_
 }
 
 # Remove gameoverlay pop-up
-sudo Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" `
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" `
     -Name "AppCaptureEnabled" `
     -Value 0
     
-sudo Set-ItemProperty -Path "HKCU:\System\GameConfigStore" `
+Set-ItemProperty -Path "HKCU:\System\GameConfigStore" `
     -Name "GameDVR_Enabled" `
     -Value 0
 
-
 # Move different folder jettings
 Copy-Item -Path "./dotfiles/powerShell/*" `
-    -Destination "~/Documents/" `
+    -Destination "$Env:USERPROFILE/Documents/" `
     -Recurse `
     -Force
 Copy-Item -Path "./dotfiles/powerToys/*" `
-    -Destination "~/Documents/" `
+    -Destination "$Env:USERPROFILE/Documents/" `
     -Recurse `
     -Force
+New-Item -ItemType SymbolicLink `
+    -Path "$Env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json" `
+    -Target "$Env:USERPROFILE\dotfiles\windowsTerminal\settings.json"
 Copy-Item -Path "./WindowsTerminal/*" `
-    -Destination "~/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState" `
+    -Destination "$Env:USERPROFILE/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState" `
     -Recurse `
     -Force
 
-if (Test-Path -Path "~/OneDrive") {
+if (Test-Path -Path "$Env:USERPROFILE/OneDrive")
+{
+    # Change powershell path to OneDrive
+    New-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' Personal `
+        -Value '$Env:USERPROFILE\OneDrive\dotfiles\powerShell' `
+        -Type ExpandString `
+        -Force
     # Create symlink for neovim settings
-    sudo New-Item -ItemType SymbolicLink -Path ~\AppData\Local\nvim -Target ~\OneDrive\dotfiles\nvim\nvim
-}
-else {
+    New-Item -ItemType SymbolicLink -Path "$Env:USERPROFILE\AppData\Local\nvim" -Target "C:\Users\logan\OneDrive\dotfiles\nvim\nvim"
+    New-Item -ItemType SymbolicLink -Path "$Env:USERPROFILE\AppData\Local\nvim" -Target "C:\Users\logan\OneDrive\dotfiles\nvim\nvim"
+} else
+{
     Copy-Item -Path "./nvim/*" `
-        -Destination "~\AppData\Local\." `
+        -Destination "$Env:USERPROFILE\AppData\Local\." `
         -Recurse `
         -Force
 }
